@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ChattyBot - Star Trek Style</title>
+    <style>
+        body {
+            background-color: black;
+            color: silver;
+            font-family: "Courier New", Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            text-align: center;
+        }
+        .response-text {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .audio-player {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .audio-player audio {
+            width: 400px;
+        }
+        input[type="text"] {
+            background-color: silver;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            width: 400px;
+            font-family: "Courier New", Courier, monospace;
+            margin-bottom: 10px;
+        }
+        input[type="submit"] {
+            background-color: #c0c0c0;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>KNOWLEDGE ENGINE</h1>
+        <div class="response-text" id="responseText"></div>
+        <div class="audio-player">
+            <audio controls id="audioPlayer">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+        <form id="questionForm">
+            <input type="text" name="question" id="questionInput" placeholder="INPUT REQUEST" autofocus required>
+            <br>
+            <input type="submit" value="ENGAGE">
+        </form>
+    </div>
+    <script>
+        $(document).ready(function() {
+            $('#questionForm').on('submit', function(e) {
+                e.preventDefault();
+                var question = $('#questionInput').val();
+                $.post('/ask', { question: question }, function(data) {
+                    $('#responseText').text('Bot: ' + data.text);
+                    var audioPlayer = document.getElementById('audioPlayer');
+                    audioPlayer.src = '/' + data.audio;
+                    audioPlayer.play();
+                });
+                $('#questionInput').val('');
+            });
+        });
+    </script>
+</body>
+</html>
